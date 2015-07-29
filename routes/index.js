@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/', function(req, res) {
+router.post('/', function(req, res) {
 	var db = req.db;
 	var collection = db.get('users');
-	var input = req.input;
+	var input = req.body;
 	collection.insert(input,function(err,cb){
 		console.log('IM in');
 		if(err){

@@ -4,16 +4,21 @@ var router = express.Router();
 router.post('/', function(req, res) {
 	var db = req.db;
 	var collection = db.get('users');
-	var input = req.body;
-	collection.insert(input,function(err,cb){
-		console.log('IM in');
-		if(err){
-			console.log(err);
+	for(i=0;i<20;i++){
+		var input = {
+			id:i,
+			timesubmitted:String(Math.random()).split('0.')[1]
 		}
-		else{
-			console.log('FINISHED INSERTING');
-		}
-	})
+		collection.insert(input,function(err,cb){
+			console.log('IM in');
+			if(err){
+				console.log(err);
+			}
+			else{
+				console.log('FINISHED INSERTING');
+			}
+		})
+	}
 });
 
 module.exports = router;

@@ -9,7 +9,10 @@ var generate_random = require('./routes/randomdata.js');
 // //express middleware parses incoming post requests and parses the json body; 
 //returned output is stored in req.body, and is sent off to the next middleware
 var Users = [];
-
+app.get('/',function(req,res){
+	res.send('HELLO THERE');
+	console.log('I HIT HEROKU');
+})
 app.get('/print',function(req,res){
 	res.send('im in here2');
 	console.log('User list: ');

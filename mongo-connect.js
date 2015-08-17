@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var insert_routes = require('./routes/index.js');
 var generate_random = require('./routes/randomdata.js');
+var port = process.env.port || 8080
 // var shutdown = require('./routes/close-connection.js');
 // var remove = require('./routes/delete.js');
 // var query = require('./query.js');
@@ -37,6 +38,6 @@ app.post('/recieve',function(req,res){
 	console.log(req.body);
 	res.send(req.body);
 })
-app.listen(8080,function(){
-	console.log('im listening');
+app.listen(port,function(){
+	console.log('im listening on port: '+port);
 })

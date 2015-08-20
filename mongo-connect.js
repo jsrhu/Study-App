@@ -11,10 +11,45 @@ var port = process.env.PORT || 8080
 var bodyParser = require('body-parser');
 // var shutdown = require('./routes/close-connection.js');
 // var remove = require('./routes/delete.js');
-// var query = require('./query.js');
+var query = require('./query.js');
+var Users = [];
+var matched = [];
+console.log(typeof Users);
+console.log(typeof insert_routes);
+console.log(typeof generate_random);
+console.log(typeof query);
+//query function
+setInterval(function(){
+	console.log('hello');
+	if(Users.length<=1){
+		console.log('empty array');
+	}
+	else{
+		var earliest = Users[0];
+		var early = Users[1];
+		for(i=0;i<Users.length;i++){
+			console.log(i);
+			if(Users[i].timesubmitted<earliest.timesubmitted){
+				console.log('first')
+				Users[i]=earliest;
+			}
+			if(Users[i].timesubmitted<early.timesubmitted && Users[i]!=earliest.timesubmitted){
+				console.log('second')
+				Users[i]=early;
+
+			}
+		}
+		console.log("earliest");
+		console.log(earliest);
+		console.log("early");
+		console.log(early);
+	}
+},1000);
+
+
 // //express middleware parses incoming post requests and parses the json body; 
 //returned output is stored in req.body, and is sent off to the next middleware
-var Users = [];
+
 app.use('/views',express.static(path.join(__dirname, 'html')));
 
 app.get('/interface',function(req,res){
@@ -46,8 +81,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+// app.use('/query',query(Users));
 app.use('/insert',insert_routes(Users));
 app.use('/random',generate_random(Users));
+app.use('/query',query(Users));
 
 
 // app.use('/shutdown',shutdown);

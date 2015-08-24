@@ -13,13 +13,10 @@
       #messages li:nth-child(odd) { background: #eee; }
     </style>
   </head>
-  <script src="/socket.io/socket.io.js"></script>
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript"></script>
   <script>
-    var socket = io();
-    function myFunction(){
-      console.log('WHATS UPPPPP');
-    }
+    var socket = io.connect('http://localhost:3000');
     $(document).ready(function(){
       $('form').submit(function(e){
         e.preventDefault();

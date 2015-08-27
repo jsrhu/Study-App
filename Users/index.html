@@ -20,7 +20,6 @@
     $(document).ready(function(){
       $('form').submit(function(e){
         e.preventDefault();
-        console.log('helllooooo');
         socket.emit('chatter', $('#m').val());
         $('#m').val('');
         return false;
@@ -28,13 +27,24 @@
       socket.on('chatmsg',function(msg){
         console.log('msg recieved...');
         $('#messages').append($('<li>').text(msg));
+        $('#messages').append($('<li>').text(socket.room));
       })
-      socket.on('establish connection',function(socketids){
-        $('#messages').append($('<li>Entering conditional....</li>'));
-        if((socket.id==socketids.socket1)||(socket.id==socketids.socket2)){
-          $('#messages').append($('<li>Connecting to chat....</li>'));
-          socket.emit('connectme',socketids.room);
-        }
+      //recieves socket id
+      socket.on('cache_client',function(ident){
+        console.log('this is my identity');
+        console.log(ident);
+        localStorage.setItem('uniqueID',ident);
+      })
+      socket.on('connect',function(){
+        console.log('client connected');
+        socket.emit('check-in',localStorage.getItem('uniqueID'));
+        console.log(localStorage.getItem('uniqueID'));
+      })
+      socket.on('clear-storage',function(){
+        localStorage.clear();
+      })
+      socket.on('print-storage',function(){
+        console.log('this is my id: '+localStorage.getItem('uniqueID'));
       })
     });
   </script>

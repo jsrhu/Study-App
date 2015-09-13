@@ -7,6 +7,7 @@ var io = require('socket.io')(http);
 
 var insert_routes = require('./routes/index.js');
 var generate_random = require('./routes/randomdata.js');
+var mongo_proxy = require('./routes/mongo_proxy.js');
 var port = process.env.PORT || 3000
 var bodyParser = require('body-parser');
 // var shutdown = require('./routes/close-connection.js');
@@ -33,7 +34,7 @@ app.get('/print',function(req,res){
 io.on('connection',function(socket){
 	socket.on('check-in',function(ident){
 		console.log(ident);
-		//should execute on connections after first time
+		//should execute on reconnections
 		if(ident!=null){
 			console.log('ident recieved');
 			console.log(ident);
@@ -55,6 +56,7 @@ io.on('connection',function(socket){
 		//should only execute on first time connections
 		else{
 			console.log('user '+socket.id+' has connected');
+			//will execute when pair of users have connected; assigns them both to a room
 			if(User!=null){
 				var room = 'room'+room_number;
 				//puts current socket id in localstorage on client side
@@ -70,6 +72,7 @@ io.on('connection',function(socket){
 				console.log('user '+socket.id+' and user '+User.id+' has joined the room');
 				User=null;
 			}
+			//will execute when a the first client connects; stores current socket in User variable
 			else{
 				socket.emit('cache_client',socket.id);
 				User=socket;
@@ -87,16 +90,6 @@ io.on('connection',function(socket){
 	})
 	socket.on('disconnect',function(){
 		console.log('client '+socket.id+" has disconnected");
-		// for(i=0;i<matched.length;i++){
-		// 	if(matched[i].id1==socket.id){
-		// 		socket.emit('cache_client',matched[i].id1);
-		// 		console.log('socket id '+matched[i].id1+' has been sent to client');
-		// 	}
-		// 	if(matched[i].id2==socket.id){
-		// 		socket.emit('cache_client',matched[i].id2);
-		// 		console.log('socket id '+matched[i].id2+' has been sent to client');
-		// 	}
-		// }
 	})
 	socket.on('checking',function(id){
 		console.log('i am :');
@@ -116,6 +109,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+app.use('/mongo_proxy',mongo_proxy());
 // app.use('/query',query(Users));
 // app.use('/insert',insert_routes(Users));
 // app.use('/random',generate_random(Users));
